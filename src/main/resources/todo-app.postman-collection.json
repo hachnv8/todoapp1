@@ -1,0 +1,98 @@
+{
+  "info": {
+    "name": "Todo App",
+    "_postman_id": "abcd1234-5678-90ef-ghij-klmnopqrstuv",
+    "description": "Postman collection for testing Spring Boot Todo App",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Todo",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Learn Spring Boot\",\n  \"description\": \"Build Todo App with Spring Boot\",\n  \"completed\": false\n}"
+        },
+        "url": {
+          "raw": "http://localhost:1212/todos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "1212",
+          "path": ["todos"]
+        }
+      }
+    },
+    {
+      "name": "Get All Todos",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:1212/todos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "1212",
+          "path": ["todos"]
+        }
+      }
+    },
+    {
+      "name": "Get Todo by ID",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:1212/todos/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "1212",
+          "path": ["todos", "1"]
+        }
+      }
+    },
+    {
+      "name": "Update Todo",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Learn Spring Boot (Updated)\",\n  \"description\": \"Build full-featured Todo App\",\n  \"completed\": false\n}"
+        },
+        "url": {
+          "raw": "http://localhost:1212/todos/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "1212",
+          "path": ["todos", "1"]
+        }
+      }
+    },
+    {
+      "name": "Delete Todo",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "http://localhost:1212/todos/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "1212",
+          "path": ["todos", "1"]
+        }
+      }
+    },
+    {
+      "name": "Mark Todo as Completed",
+      "request": {
+        "method": "PATCH",
+        "url": {
+          "raw": "http://localhost:1212/todos/1/complete",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "1212",
+          "path": ["todos", "1", "complete"]
+        }
+      }
+    }
+  ]
+}
