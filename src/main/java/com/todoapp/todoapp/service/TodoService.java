@@ -1,6 +1,7 @@
 package com.todoapp.todoapp.service;
 
 import com.todoapp.todoapp.entity.Todo;
+import com.todoapp.todoapp.redis.model.TodoRedis;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,4 +24,6 @@ public interface TodoService {
 
     // Mark a Todo as completed
     Todo markAsCompleted(Long id);
+
+     TodoRedis createTodo(TodoRedis todo);
 }

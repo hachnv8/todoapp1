@@ -2,6 +2,8 @@ package com.todoapp.todoapp.controller;
 
 import com.todoapp.todoapp.entity.Todo;
 import com.todoapp.todoapp.exception.TodoNotFoundException;
+import com.todoapp.todoapp.kafka.TodoProducer;
+import com.todoapp.todoapp.redis.model.TodoRedis;
 import com.todoapp.todoapp.service.impl.TodoServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,11 +18,13 @@ import java.util.Optional;
 @RequestMapping("/todos")
 public class TodoController {
     private final TodoServiceImpl todoService;
+    private final TodoProducer todoProducer;
 
     // Create a new Todo
     @PostMapping
-    public ResponseEntity<Todo> createTodo(@RequestBody Todo todo) {
-        Todo createdTodo = todoService.createTodo(todo);
+    public ResponseEntity<TodoRedis> createTodo(@RequestBody TodoRedis todo) {
+        TodoRedis createdTodo = todoService.createTodo(todo);
+        todoProducer.sendTodoCreated("New Todo created: " + todo.getTitle());
         return new ResponseEntity<>(createdTodo, HttpStatus.CREATED);
     }
 

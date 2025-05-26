@@ -2,7 +2,10 @@ package com.todoapp.todoapp.service.impl;
 
 import com.todoapp.todoapp.entity.Todo;
 import com.todoapp.todoapp.exception.TodoNotFoundException;
+import com.todoapp.todoapp.redis.model.TodoRedis;
+import com.todoapp.todoapp.redis.repository.TodoRedisRepository;
 import com.todoapp.todoapp.repository.TodoRepository;
+import com.todoapp.todoapp.service.GenericRedisService;
 import com.todoapp.todoapp.service.TodoService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -10,12 +13,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class TodoServiceImpl implements TodoService {
     private final TodoRepository todoRepository;
+    private final GenericRedisService redisService;
 
     @Override
     public Todo createTodo(Todo todo) {
@@ -60,5 +65,11 @@ public class TodoServiceImpl implements TodoService {
             return todoRepository.save(todo);
         }
         throw new TodoNotFoundException("Todo with id " + id + " not found");
+    }
+
+    @Override
+    public TodoRedis createTodo(TodoRedis todo) {
+        redisService.save("todoRedis", UUID.randomUUID().toString(), todo);
+        return redisService.get("todoRedis", todo.getId(), TodoRedis.class);
     }
 }
