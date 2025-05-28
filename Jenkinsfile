@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+     tools {
+            maven 'Maven_Tool' // Tên đúng với cấu hình ở bước trên
+     }
+
     environment {
         IMAGE_NAME = "todoapp"
         CONTAINER_NAME = "todoapp_container"
