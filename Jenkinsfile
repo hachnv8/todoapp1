@@ -40,6 +40,34 @@ pipeline {
             }
         }
 
+        stage('Create nginx.conf') {
+            steps {
+                script {
+                    writeFile file: 'nginx.conf', text: '''
+                    events {}
+
+                    http {
+                        upstream todoapp {
+                            server 127.0.0.1:1212;
+                            server 127.0.0.1:1213;
+                        }
+
+                        server {
+                            listen 80;
+
+                            location / {
+                                proxy_pass http://todoapp;
+                                proxy_set_header Host $host;
+                                proxy_set_header X-Real-IP $remote_addr;
+                                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                            }
+                        }
+                    }
+                    '''
+                }
+            }
+        }
+
         stage('Push and Deploy to VPS') {
             steps {
                 sshagent(['vps-ssh-key']) {
@@ -64,6 +92,7 @@ pipeline {
                 }
             }
         }
+
         stage('Deploy NGINX') {
             steps {
                 sshagent(['vps-ssh-key']) {
