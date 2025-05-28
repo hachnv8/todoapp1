@@ -60,6 +60,7 @@ pipeline {
                             docker run -d --name $CONTAINER_NAME -p 1212:1212 $IMAGE_NAME
                         '
                     """
+                }
             }
         }
     }
