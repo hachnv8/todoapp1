@@ -8,6 +8,6 @@ public class TodoConsumer {
 
     @KafkaListener(topics = "todo-created", groupId = "todo-group")
     public void handleTodoCreated(String message) {
-        System.out.println("Received todo: " + message);
+//        System.out.println("Received todo: " + message);
     }
 }

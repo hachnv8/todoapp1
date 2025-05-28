@@ -19,6 +19,7 @@ public class TodoSyncService {
 
     @Scheduled(fixedRate = 120000) // 4 hours = 4 * 60 * 60 * 1000 ms
     public void syncToMySQL() {
+        System.out.println("Scheduled sync started...");
         Map<Object, Object> cachedTodos = redisService.getAll("todoRedis");
 
         List<Todo> todoList = new ArrayList<>();
