@@ -29,7 +29,7 @@ pipeline {
             steps {
                 sh 'chmod +x mvnw'
                 sh './mvnw clean package -DskipTests'
-
+                sh 'mv target/todo-app-0.0.1-SNAPSHOT.jar target/todoapp.jar'
             }
         }
 
