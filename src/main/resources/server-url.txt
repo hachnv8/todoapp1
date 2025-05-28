@@ -1,0 +1,3 @@
+Redis Insight: http://36.50.135.128:5540/
+Kafka UI: http://36.50.135.128:8090/
+Jenkins: http://36.50.135.128:8080/

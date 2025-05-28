@@ -69,7 +69,9 @@ public class TodoServiceImpl implements TodoService {
 
     @Override
     public TodoRedis createTodo(TodoRedis todo) {
-        redisService.save("todoRedis", UUID.randomUUID().toString(), todo);
-        return redisService.get("todoRedis", todo.getId(), TodoRedis.class);
+        String id = UUID.randomUUID().toString();
+        todo.setId(id);  // Set ID so you can retrieve later
+        redisService.save("todoRedis", id, todo);
+        return redisService.get("todoRedis", id, TodoRedis.class);
     }
 }

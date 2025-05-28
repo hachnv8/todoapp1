@@ -16,7 +16,7 @@ public class RedisConfig {
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         // Nếu Redis chạy trên localhost port 6379, để mặc định như này
-        return new LettuceConnectionFactory("localhost", 6379);
+        return new LettuceConnectionFactory("36.50.135.128", 6379);
     }
 
     @Bean
