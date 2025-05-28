@@ -33,12 +33,12 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public Optional<Todo> getTodoById(Long id) {
+    public Optional<Todo> getTodoById(String id) {
         return todoRepository.findById(id);
     }
 
     @Override
-    public Todo updateTodo(Long id, Todo todo) {
+    public Todo updateTodo(String id, Todo todo) {
         // Check if the Todo exists
         if (todoRepository.existsById(id)) {
             todo.setId(id);
@@ -48,7 +48,7 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public void deleteTodoById(Long id) {
+    public void deleteTodoById(String id) {
         if (todoRepository.existsById(id)) {
             todoRepository.deleteById(id);
         } else {
@@ -57,7 +57,7 @@ public class TodoServiceImpl implements TodoService {
     }
 
     @Override
-    public Todo markAsCompleted(Long id) {
+    public Todo markAsCompleted(String id) {
         Optional<Todo> todoOptional = todoRepository.findById(id);
         if (todoOptional.isPresent()) {
             Todo todo = todoOptional.get();

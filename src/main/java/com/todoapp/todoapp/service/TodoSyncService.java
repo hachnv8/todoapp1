@@ -30,7 +30,7 @@ public class TodoSyncService {
             TodoRedis cached = (TodoRedis) entry.getValue();
 
             Todo entity = new Todo();
-            entity.setId(Long.valueOf(cached.getId()));
+            entity.setId(cached.getId());
             entity.setTitle(cached.getTitle());
             entity.setDone(true);
 

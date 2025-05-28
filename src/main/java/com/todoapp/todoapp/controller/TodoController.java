@@ -37,7 +37,7 @@ public class TodoController {
 
     // Get a Todo by ID
     @GetMapping("/{id}")
-    public ResponseEntity<Todo> getTodoById(@PathVariable Long id) {
+    public ResponseEntity<Todo> getTodoById(@PathVariable String id) {
         Optional<Todo> todo = todoService.getTodoById(id);
         return todo.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -45,7 +45,7 @@ public class TodoController {
 
     // Update an existing Todo
     @PutMapping("/{id}")
-    public ResponseEntity<Todo> updateTodo(@PathVariable Long id, @RequestBody Todo todo) {
+    public ResponseEntity<Todo> updateTodo(@PathVariable String id, @RequestBody Todo todo) {
         try {
             Todo updatedTodo = todoService.updateTodo(id, todo);
             return new ResponseEntity<>(updatedTodo, HttpStatus.OK);
@@ -56,7 +56,7 @@ public class TodoController {
 
     // Delete a Todo by ID
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTodoById(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteTodoById(@PathVariable String id) {
         try {
             todoService.deleteTodoById(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -67,7 +67,7 @@ public class TodoController {
 
     // Mark a Todo as completed
     @PatchMapping("/{id}/complete")
-    public ResponseEntity<Todo> markAsCompleted(@PathVariable Long id) {
+    public ResponseEntity<Todo> markAsCompleted(@PathVariable String id) {
         try {
             Todo completedTodo = todoService.markAsCompleted(id);
             return new ResponseEntity<>(completedTodo, HttpStatus.OK);

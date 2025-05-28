@@ -14,16 +14,16 @@ public interface TodoService {
     List<Todo> getAllTodos();
 
     // Get a Todo by its ID
-    Optional<Todo> getTodoById(Long id);
+    Optional<Todo> getTodoById(String id);
 
     // Update an existing Todo
-    Todo updateTodo(Long id, Todo todo);
+    Todo updateTodo(String id, Todo todo);
 
     // Delete a Todo by its ID
-    void deleteTodoById(Long id);
+    void deleteTodoById(String id);
 
     // Mark a Todo as completed
-    Todo markAsCompleted(Long id);
+    Todo markAsCompleted(String id);
 
      TodoRedis createTodo(TodoRedis todo);
 }
