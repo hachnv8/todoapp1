@@ -40,33 +40,41 @@ pipeline {
             }
         }
 
-        stage('Create nginx.conf') {
-            steps {
-                script {
-                    writeFile file: 'nginx.conf', text: '''
-                    events {}
+//         stage('Create nginx.conf') {
+//             steps {
+//                 script {
+//                     writeFile file: 'nginx.conf', text: '''
+//                     events {}
+//
+//                     http {
+//                         upstream todoapp {
+//                             server 127.0.0.1:1212;
+//                             server 127.0.0.1:1213;
+//                         }
+//
+//                         server {
+//                             listen 80;
+//
+//                             location / {
+//                                 proxy_pass http://todoapp;
+//                                 proxy_set_header Host $host;
+//                                 proxy_set_header X-Real-IP $remote_addr;
+//                                 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+//                             }
+//                         }
+//                     }
+//                     '''
+//                 }
+//             }
+//         }
+//
+//         stage('Check nginx.conf') {
+//           steps {
+//             sh 'ls -l nginx.conf'
+//             sh 'cat nginx.conf'
+//           }
+//         }
 
-                    http {
-                        upstream todoapp {
-                            server 127.0.0.1:1212;
-                            server 127.0.0.1:1213;
-                        }
-
-                        server {
-                            listen 80;
-
-                            location / {
-                                proxy_pass http://todoapp;
-                                proxy_set_header Host $host;
-                                proxy_set_header X-Real-IP $remote_addr;
-                                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                            }
-                        }
-                    }
-                    '''
-                }
-            }
-        }
 
         stage('Push and Deploy to VPS') {
             steps {
@@ -93,29 +101,28 @@ pipeline {
             }
         }
 
-        stage('Deploy NGINX') {
-            steps {
-                sshagent(['vps-ssh-key']) {
-                    sh """
-                        # Upload nginx.conf to VPS
-                        scp -o StrictHostKeyChecking=no nginx.conf $VPS_USER@$VPS_IP:$REMOTE_APP_PATH/
-
-                        ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_IP '
-                            # Stop and remove old nginx container if exists
-                            docker stop nginx || true &&
-                            docker rm nginx || true &&
-
-                            # Run new NGINX container with the uploaded config
-                            docker run -d --name nginx \
-                                -v $REMOTE_APP_PATH/nginx.conf:/etc/nginx/nginx.conf:ro \
-                                -p 80:80 \
-                                --restart always \
-                                nginx
-                        '
-                    """
-                }
-            }
-        }
-
+//         stage('Deploy NGINX') {
+//             steps {
+//                 sshagent(['vps-ssh-key']) {
+//                     sh """
+//                         # Upload nginx.conf to VPS
+//                         scp -o StrictHostKeyChecking=no nginx.conf $VPS_USER@$VPS_IP:$REMOTE_APP_PATH/
+//
+//                         ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_IP '
+//                             # Stop and remove old nginx container if exists
+//                             docker stop nginx || true &&
+//                             docker rm nginx || true &&
+//
+//                             # Run new NGINX container with the uploaded config
+//                             docker run -d --name nginx \
+//                                 -v $REMOTE_APP_PATH/nginx.conf:/etc/nginx/nginx.conf:ro \
+//                                 -p 80:80 \
+//                                 --restart always \
+//                                 nginx
+//                         '
+//                     """
+//                 }
+//             }
+//         }
     }
 }
