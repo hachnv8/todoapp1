@@ -64,5 +64,29 @@ pipeline {
                 }
             }
         }
+        stage('Deploy NGINX') {
+            steps {
+                sshagent(['vps-ssh-key']) {
+                    sh """
+                        # Upload nginx.conf to VPS
+                        scp -o StrictHostKeyChecking=no nginx.conf $VPS_USER@$VPS_IP:$REMOTE_APP_PATH/
+
+                        ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_IP '
+                            # Stop and remove old nginx container if exists
+                            docker stop nginx || true &&
+                            docker rm nginx || true &&
+
+                            # Run new NGINX container with the uploaded config
+                            docker run -d --name nginx \
+                                -v $REMOTE_APP_PATH/nginx.conf:/etc/nginx/nginx.conf:ro \
+                                -p 80:80 \
+                                --restart always \
+                                nginx
+                        '
+                    """
+                }
+            }
+        }
+
     }
 }
