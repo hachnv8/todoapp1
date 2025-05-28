@@ -89,12 +89,12 @@ pipeline {
                             docker stop $CONTAINER_NAME_1 || true &&
                             docker rm $CONTAINER_NAME_1 || true &&
                             docker rm -f $CONTAINER_NAME_1 || true &&
-                            docker run -d --name $CONTAINER_NAME_1 --restart always -p 1212:1212 $IMAGE_NAME &&
+                            docker run -d --name $CONTAINER_NAME_1 --restart always --network todoapp-network -p 1212:1212 $IMAGE_NAME &&
 
                             docker stop $CONTAINER_NAME_2 || true &&
                             docker rm $CONTAINER_NAME_2 || true &&
                             docker rm -f $CONTAINER_NAME_2 || true &&
-                            docker run -d --name $CONTAINER_NAME_2 --restart always -p 1213:1212 $IMAGE_NAME
+                            docker run -d --name $CONTAINER_NAME_2 --restart always --network todoapp-network -p 1213:1212 $IMAGE_NAME
                         '
                     """
                 }
