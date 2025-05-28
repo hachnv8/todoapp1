@@ -7,7 +7,8 @@ pipeline {
 
     environment {
         IMAGE_NAME = "todoapp"
-        CONTAINER_NAME = "todoapp_container"
+        CONTAINER_NAME_1 = "todoapp_instance1_container"
+        CONTAINER_NAME_2 = "todoapp_instance2_container"
         VPS_USER = "root"
         VPS_IP = "36.50.135.128"
         REMOTE_APP_PATH = "/home/root/todoapp"
@@ -41,13 +42,6 @@ pipeline {
 
         stage('Push and Deploy to VPS') {
             steps {
-//                 // Optional: Save image to tar, copy, and run on VPS
-//                 sh """
-//                   ssh -i ~/.ssh/id_rsa $VPS_USER@$VPS_IP "mkdir -p $REMOTE_APP_PATH"
-//                   docker save $IMAGE_NAME > todoapp.tar
-//                   scp todoapp.tar $VPS_USER@$VPS_IP:$REMOTE_APP_PATH/
-//                   ssh $VPS_USER@$VPS_IP 'docker load < $REMOTE_APP_PATH/todoapp.tar && docker stop $CONTAINER_NAME || true && docker rm $CONTAINER_NAME || true && docker run -d --name $CONTAINER_NAME -p 1212:1212 $IMAGE_NAME'
-//                 """
                 sshagent(['vps-ssh-key']) {
                     sh """
                         ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_IP "mkdir -p $REMOTE_APP_PATH"
@@ -55,9 +49,14 @@ pipeline {
                         scp -o StrictHostKeyChecking=no todoapp.tar $VPS_USER@$VPS_IP:$REMOTE_APP_PATH/
                         ssh -o StrictHostKeyChecking=no $VPS_USER@$VPS_IP '
                             docker load < $REMOTE_APP_PATH/todoapp.tar &&
-                            docker stop $CONTAINER_NAME || true &&
-                            docker rm $CONTAINER_NAME || true &&
-                            docker run -d --name $CONTAINER_NAME -p 1212:1212 $IMAGE_NAME
+
+                                docker stop todoapp_instance1 || true &&
+                                docker rm todoapp_instance1 || true &&
+                                docker run -d --name $CONTAINER_NAME_1 --restart always -p 1212:1212 $IMAGE_NAME &&
+
+                                docker stop todoapp_instance2 || true &&
+                                docker rm todoapp_instance2 || true &&
+                                docker run -d --name $CONTAINER_NAME_2 --restart always -p 1213:1212 $IMAGE_NAME
                         '
                     """
                 }
