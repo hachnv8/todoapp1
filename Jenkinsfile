@@ -52,10 +52,12 @@ pipeline {
 
                                 docker stop todoapp_instance1 || true &&
                                 docker rm todoapp_instance1 || true &&
+                                docker rm -f todoapp_instance1_container || true &&
                                 docker run -d --name $CONTAINER_NAME_1 --restart always -p 1212:1212 $IMAGE_NAME &&
 
                                 docker stop todoapp_instance2 || true &&
                                 docker rm todoapp_instance2 || true &&
+                                docker rm -f todoapp_instance2_container || true &&
                                 docker run -d --name $CONTAINER_NAME_2 --restart always -p 1213:1212 $IMAGE_NAME
                         '
                     """
