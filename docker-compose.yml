@@ -1,37 +1,50 @@
-#version: '3.8'
-#services:
-#  todoapp:
-#    build: .
-#    ports:
-#      - "8080:8080"
-#    depends_on:
-#      - mysql
-#    environment:
-#      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/tododb
-#      SPRING_DATASOURCE_USERNAME: root
-#      SPRING_DATASOURCE_PASSWORD: Hach1997!
-#  mysql:
-#    image: mysql:8
-#    environment:
-#      MYSQL_ROOT_PASSWORD: rootpass
-#      MYSQL_DATABASE: tododb
-#    ports:
-#      - "3306:3306"
 version: '3.8'
 
 services:
-  todoapp:
+  todoapp1:
     build: .
-    ports:
-      - "1212:1212"
-    depends_on:
-      - mysql
-      - kafka
-      - redis
+    container_name: todoapp1
+    expose:
+      - "1212"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/tododb
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: Hach1997!
+    depends_on:
+      - mysql
+      - kafka
+      - redis
+    networks:
+      - app-net
+
+  todoapp2:
+    build: .
+    container_name: todoapp2
+    expose:
+      - "1212"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/tododb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: Hach1997!
+    depends_on:
+      - mysql
+      - kafka
+      - redis
+    networks:
+      - app-net
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - todoapp1
+      - todoapp2
+    networks:
+      - app-net
 
   mysql:
     image: mysql:8
@@ -43,12 +56,16 @@ services:
       - "3306:3306"
     volumes:
       - mysql-data:/var/lib/mysql
+    networks:
+      - app-net
 
   redis:
     image: redis:latest
     container_name: redis-cache
     ports:
       - "6379:6379"
+    networks:
+      - app-net
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.9.1
@@ -58,6 +75,8 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
+    networks:
+      - app-net
 
   kafka:
     image: confluentinc/cp-kafka:7.9.1
@@ -71,16 +90,23 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - app-net
 
   jenkins:
     image: jenkins/jenkins:lts
     container_name: jenkins
     ports:
-      - "8080:8080"   # Jenkins UI -> http://localhost:8081
+      - "8081:8080"
       - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
+    networks:
+      - app-net
 
 volumes:
   mysql-data:
   jenkins_home:
+
+networks:
+  app-net:
