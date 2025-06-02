@@ -22,6 +22,8 @@ public class TodoSyncService {
         System.out.println("Scheduled sync started...");
         Map<Object, Object> cachedTodos = redisService.getAll("todoRedis");
 
+        if (cachedTodos == null || cachedTodos.isEmpty()) return;
+
         List<Todo> todoList = new ArrayList<>();
         List<String> idsToDelete = new ArrayList<>();
 
@@ -42,8 +44,6 @@ public class TodoSyncService {
         todoRepo.saveAll(todoList);
 
         // Delete from Redis using your service
-        for (String id : idsToDelete) {
-            redisService.delete("todoRedis", id);
-        }
+        redisService.deleteBatch("todoRedis", idsToDelete);
     }
 }

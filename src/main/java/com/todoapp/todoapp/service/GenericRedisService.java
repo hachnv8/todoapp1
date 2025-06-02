@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -29,5 +30,9 @@ public class GenericRedisService {
     // Lấy tất cả object trong Redis hash
     public Map<Object, Object> getAll(String hashName) {
         return redisTemplate.opsForHash().entries(hashName);
+    }
+
+    public void deleteBatch(String key, List<String> ids) {
+        redisTemplate.opsForHash().delete(key, ids.toArray());
     }
 }
